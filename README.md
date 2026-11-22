@@ -15,6 +15,13 @@ raw (CSV landing) -> bronze (cleaned, partitioned) -> silver (Iceberg-style cura
                     data quality checks               snapshot / time-travel reads
 ```
 ## Run
+
+### Before / After
+
+Hover any component to see what it is and why it is needed.
+
+![Before / After architecture](docs/before-after-elaborated.svg)
+
 ```bash
 python -m src.generate_data --rows 5000 --out data/raw
 python -m src.migrate --input data/raw --output data/curated
