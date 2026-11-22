@@ -21,6 +21,25 @@ raw (CSV landing) -> bronze (cleaned, partitioned) -> silver (Iceberg-style cura
 Hover any component to see what it is and why it is needed.
 
 ![Before / After architecture](docs/before-after-elaborated.svg)
+<details>
+<summary><b>Backfill + snapshot — click to expand the 4 steps</b></summary>
+
+Collapsed, this is just: Hive source -> PySpark migrate -> Iceberg on S3 -> Snapshots
+
+1. The original Hive tables stay as the source, so nothing is lost during migration.
+2. PySpark jobs migrate tables in stages, so each table is proven before it moves.
+3. Iceberg tables on S3 give ACID transactions, so writes are atomic and safe.
+4. Every write creates a snapshot, so any earlier version can be read or rolled back to; readers pin a snapshot, so the old and new versions can be compared before cutover.
+</details>
+
+### Earlier issues, risk, and impact after
+
+| Aspect | Detail |
+|---|---|
+| Earlier issues | Hive tables with no transactions, so a failed write could leave partial data; a static metastore where schema changes needed rewrites; no way to read an earlier snapshot, so a bad load could not be rolled back cleanly; backfills run by hand, easy to get wrong and hard to repeat; no quality gate before a snapshot is promoted; readers and writers shared the same state, so queries could see half-written data. |
+| Risk | A failed write could leave partial data behind; a bad load could become the current version with no clean rollback; a hand-run backfill that went wrong had to be redone from scratch; changing a schema meant rewriting history. |
+| Impact after | Writes are atomic with ACID transactions; schema and partition changes apply without rewriting history; snapshot isolation lets readers pin a version while writers append a new one; DQ gates run before a snapshot is promoted; Airflow orchestrates the migration in stages. |
+
 
 ```bash
 python -m src.generate_data --rows 5000 --out data/raw
