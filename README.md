@@ -7,6 +7,8 @@ Portfolio implementation based on production work experience. All data is synthe
 **This portfolio version:** A runnable local implementation using PySpark-style transformations structured so the same code maps to Iceberg tables on S3 in production. Synthetic automotive parts and service data only.
 
 ## Architecture
+
+![Iceberg lakehouse architecture](docs/iceberg-lakehouse.svg)
 ```
 raw (CSV landing) -> bronze (cleaned, partitioned) -> silver (Iceberg-style curated) -> gold (aggregates)
                          |                                   |
