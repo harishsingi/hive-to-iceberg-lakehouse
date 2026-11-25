@@ -1,0 +1,26 @@
+# Default configuration for the hive-to-iceberg-lakehouse pipeline.
+# Every value here can be overridden on the CLI (see --help on each module)
+# or by environment: LAKEHOUSE_ROWS, LAKEHOUSE_SEED.
+# No credentials are used anywhere: the pipeline runs fully locally.
+generator:
+  rows: 1000
+  seed: 42
+  start_date: "2024-01-01"
+  date_span_days: 700
+  parts:
+    - brake pad
+    - filter
+    - battery
+    - alternator
+    - sensor
+    - pump
+  regions: [SE, NE, MW, W]
+  min_qty: 1
+  max_qty: 20
+
+paths:
+  raw_dir: data/raw
+  curated_dir: data/curated
+  gold_dir: data/gold
+
+log_level: INFO

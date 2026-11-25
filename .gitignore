@@ -1,0 +1,14 @@
+# Generated pipeline output (regenerable with the commands in the README)
+data/
+# Python bytecode and packaging
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+# Test / lint caches
+.pytest_cache/
+.ruff_cache/
+# Virtual environments
+.venv/
+venv/
